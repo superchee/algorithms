@@ -12,9 +12,44 @@ struct ListNode {
     struct ListNode *next;
 };
 
-
-
 struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
+	struct ListNode *l3 = NULL,  *tempNode = NULL, *l4=NULL;
+	int nSum = 0, nCarry = 0;
+
+	while (l1 || l2 || nCarry) {
+		tempNode = (struct ListNode*)malloc(sizeof(struct ListNode));
+		tempNode->next = NULL;
+		nSum = nCarry;
+		if (!l1) {
+			nSum += l1->val;
+			l1 = l1->next;
+		}
+		if (!l2) {
+			nSum += l2->val;
+			l2 = l2->next;
+		}
+
+		nCarry = nSum / 10;
+
+		tempNode->val = nSum % 10;
+
+		if (l3) {
+			l3->next = tempNode;
+			l3 = l3->next;
+		}
+		else {
+			l3 = tempNode;
+			l4 = tempNode;
+		}
+	}
+
+
+	return l4;
+
+}
+
+
+struct ListNode* addTwoNumbersTwo(struct ListNode* l1, struct ListNode* l2) {
 	struct ListNode *l3 = NULL, *l1current = NULL, *l2current = NULL, *l3current = NULL, *temp1 = NULL;
 	int nSum = 0, nCarry = 0;
 
