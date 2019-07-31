@@ -5,6 +5,15 @@ char * convert(char * s, int numRows){
     char *returnChar = NULL;
     nSize = strlen(s);
     returnChar = (char *)malloc(sizeof(char)*(nSize +1));
+    
+    if (nSize <= numRows){
+        return s;
+    }
+    
+    if (numRows == 1){
+        return s;
+    }
+
 
     for (int r = 0; r < numRows; r++){
         nIdx = r;
@@ -28,7 +37,7 @@ char * convert(char * s, int numRows){
                     break;
                 }
                 returnChar[nNewIdx++] = s[nIdx];
-                nIdx += 2*r -2;
+                nIdx += 2*(r+1) -2;
             }
         }
 
