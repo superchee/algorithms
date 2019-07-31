@@ -6,29 +6,13 @@
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
-int lengthOfLongestSubstring(char * s);
+
 char *inputString(FILE* fp, size_t size);
+char * convert(char * s, int numRows);
+
 
 
 using namespace std;
-
-int main(){
-	char *s;
-
-	printf("input:");
-
-	s = inputString(stdin, 10);
-
-	int nMax = lengthOfLongestSubstring(s);
-
-	cout << nMax;
-
-	system("pause");
-
-
-
-}
-
 char *inputString(FILE* fp, size_t size){
 //The size is extended by the input with the value of the provisional
     char *str;
@@ -48,21 +32,59 @@ char *inputString(FILE* fp, size_t size){
     return (char *)realloc(str, sizeof(char)*len);
 }
 
-int lengthOfLongestSubstring(char * s) {
-	int nStart = 0, nEnd = 0, nMax = 0, nTemp = 0;
+int main(){
+	char *s;
 
-	int loc[128];
-	memset(loc,-1,128*sizeof(int));
+	printf("input:");
 
-	for (nEnd = 0; nEnd< strlen(s); nEnd++) {
-		nTemp = loc[s[nEnd]];
-		loc[s[nEnd]] = nEnd;
-		if (nTemp >= nStart) {
-			nMax = MAX(nMax, nEnd - nStart);
-			nStart = nTemp + 1;
-		}
-	}
-	nMax = MAX(nMax, nEnd - nStart);
+	s = inputString(stdin, 10);
 
-	return nMax;
+	char *reChar;
+	reChar = convert(s, 4);
+
+	cout << reChar << endl;
+
+	system("pause");
+
+
+
+}
+
+
+char * convert(char * s, int numRows){
+    int nSize = 0, nIdx = 0, nNewIdx = 0;
+    char *returnChar = NULL;
+    nSize = strlen(s);
+    returnChar = (char *)malloc(sizeof(char)*(nSize +1));
+
+    for (int r = 0; r < numRows; r++){
+        nIdx = r;
+        if (r == 0){
+            while(nIdx < nSize){
+                returnChar[nNewIdx++] = s[nIdx];
+                nIdx += 2*numRows - 2;
+            }
+        }
+        else if(r == numRows - 1){
+            while(nIdx < nSize){
+                returnChar[nNewIdx++] = s[nIdx];
+                nIdx += 2*numRows - 2;
+            }
+        }
+        else{
+            while(nIdx < nSize){
+                returnChar[nNewIdx++] = s[nIdx];
+                nIdx += 2*(numRows -r) -2;
+                if (nIdx > nSize){
+                    break;
+                }
+                returnChar[nNewIdx++] = s[nIdx];
+                nIdx += 2*(r+1) -2;
+            }
+        }
+
+    }
+    returnChar[nSize] = '\0';
+    return returnChar;
+
 }
