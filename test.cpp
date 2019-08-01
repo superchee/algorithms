@@ -9,7 +9,8 @@ char *inputString(FILE* fp, size_t size);
 
 
 bool safeAdd(int a, int b);
-int myAtoi(char * str);
+
+bool isPalindrome(int x);
 
 using namespace std;
 char *inputString(FILE* fp, size_t size){
@@ -41,7 +42,7 @@ int main(){
 	char *reChar;
     int nInput, nReturn;
 
-	nReturn = myAtoi(s);
+	nReturn = isPalindrome(atoi(s));
 
 
 	cout << nReturn << endl;
@@ -53,29 +54,16 @@ int main(){
 }
 
 
-int myAtoi(char * str) {
-    int nSum = 0, nTemp;
-    int nSign = 1, nIdx = 0;
+bool isPalindrome(int x){
+    int nR = 0, nTemp=0;
+    int Input = x;
+    if (Input < 0) return false;
 
-    if (str == NULL)
-        return 0;
-
-    while (str[nIdx] == ' ') nIdx++;
-    if (str[nIdx] == '+'){
-        nIdx++;
+    while (Input != 0){
+        nTemp = Input%10;
+        if (nR > (INT_MAX - nTemp)/10) return false;
+        nR = nR*10 + nTemp;
+        Input = Input/10;
     }
-    else if(str[nIdx] == '-'){
-        nSign = -1;
-        nIdx++;
-    }
-    while (str[nIdx] != '\0'){
-        if (str[nIdx] < '0' || str[nIdx] > '9') break;
-        nTemp = str[nIdx++] - '0';
-
-        if (nSum > (INT_MAX - nTemp)/10) return nSign > 0? INT_MAX:INT_MIN;
-
-        nSum = nSum*10 + nTemp;
-    }
-    
-    return nSign * nSum;
+    return nR == x;
 }
