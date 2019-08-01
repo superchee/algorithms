@@ -1,16 +1,15 @@
 
-#include <stdlib.h>
 #include <iostream>
-#include <string.h>
-#include <stdio.h>
+#include <limits.h>
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
 
 char *inputString(FILE* fp, size_t size);
-char * convert(char * s, int numRows);
 
 
+bool safeAdd(int a, int b);
+int myAtoi(char * str);
 
 using namespace std;
 char *inputString(FILE* fp, size_t size){
@@ -40,9 +39,12 @@ int main(){
 	s = inputString(stdin, 10);
 
 	char *reChar;
-	reChar = convert(s, 4);
+    int nInput, nReturn;
 
-	cout << reChar << endl;
+	nReturn = myAtoi(s);
+
+
+	cout << nReturn << endl;
 
 	system("pause");
 
@@ -51,40 +53,29 @@ int main(){
 }
 
 
-char * convert(char * s, int numRows){
-    int nSize = 0, nIdx = 0, nNewIdx = 0;
-    char *returnChar = NULL;
-    nSize = strlen(s);
-    returnChar = (char *)malloc(sizeof(char)*(nSize +1));
+int myAtoi(char * str) {
+    int nSum = 0, nTemp;
+    int nSign = 1, nIdx = 0;
 
-    for (int r = 0; r < numRows; r++){
-        nIdx = r;
-        if (r == 0){
-            while(nIdx < nSize){
-                returnChar[nNewIdx++] = s[nIdx];
-                nIdx += 2*numRows - 2;
-            }
-        }
-        else if(r == numRows - 1){
-            while(nIdx < nSize){
-                returnChar[nNewIdx++] = s[nIdx];
-                nIdx += 2*numRows - 2;
-            }
-        }
-        else{
-            while(nIdx < nSize){
-                returnChar[nNewIdx++] = s[nIdx];
-                nIdx += 2*(numRows -r) -2;
-                if (nIdx > nSize){
-                    break;
-                }
-                returnChar[nNewIdx++] = s[nIdx];
-                nIdx += 2*(r+1) -2;
-            }
-        }
+    if (str == NULL)
+        return 0;
 
+    while (str[nIdx] == ' ') nIdx++;
+    if (str[nIdx] == '+'){
+        nIdx++;
     }
-    returnChar[nSize] = '\0';
-    return returnChar;
+    else if(str[nIdx] == '-'){
+        nSign = -1;
+        nIdx++;
+    }
+    while (str[nIdx] != '\0'){
+        if (str[nIdx] < '0' || str[nIdx] > '9') break;
+        nTemp = str[nIdx++] - '0';
 
+        if (nSum > (INT_MAX - nTemp)/10) return nSign > 0? INT_MAX:INT_MIN;
+
+        nSum = nSum*10 + nTemp;
+    }
+    
+    return nSign * nSum;
 }
