@@ -5,6 +5,82 @@ int compare(const void * a, const void * b){
     return *(int*)a - *(int*)b;
 }
 
+void swap(int* x, int* y){
+    //*x = ((*y) * (*x))/(*y = *x);
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+int partition(int* nums, int nStart, int nEnd){
+    int pivot = nums[nEnd];
+
+    int pIdx = nStart;
+
+    for (int i = nStart; i < nEnd; i++){
+        if (nums[i] < pivot){
+            swap(nums+i, nums+pIdx);
+            pIdx++;
+        }
+    }
+    swap(nums+pIdx, nums+nEnd);
+    return pIdx;
+}
+
+
+
+
+void quicksort(int * nums, int nStart, int nEnd){
+    if (nStart >= nEnd)
+        return;
+    
+    int pivot = partition(nums, nStart, nEnd);
+
+    quicksort(nums, nStart, pivot-1);
+    quicksort(nums, pivot+1, nEnd);
+
+}
+
+void merge(int* nums, int*temp, int nStart, int mid, int nEnd){
+    int k=nStart, i=nStart, j=mid+1;
+    while (i<=mid && j<=nEnd)
+    {
+        if(nums[i]<nums[j]){
+            temp[k++] = nums[i++];
+        }
+        else{
+            temp[k++] = nums[j++];
+        }
+    }
+    while(i<=mid){
+        temp[k++] = nums[i++];
+    }
+    for(int m = nStart; m<= nEnd; m++){
+        nums[m] = temp[m];
+    }
+}
+
+void mergesplitsort(int* nums, int* temp, int nStart, int nEnd){
+    if (nStart >= nEnd)
+        return;
+    
+    int mid = nStart + ((nEnd-nStart)>>1);
+
+    mergesplitsort(nums, temp, nStart, mid);
+    mergesplitsort(nums, temp, mid+1, nEnd);
+
+    merge(nums, temp, nStart, mid, nEnd);
+}
+
+void mergesort(int* nums, int numsSize){
+    int* temp = (int*)malloc(sizeof(int)*numsSize);
+
+    for (int i = 0; i < numsSize; i++){
+        temp[i] = nums[i];
+    }
+    mergesplitsort(nums, temp, 0, numsSize-1);
+    free(temp);
+}
 
 int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes){
     int nStart = 0, nEnd = 0, nSum = 0, nTarget = 0, nblock = 64;
@@ -17,7 +93,10 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
     
 
 
-    qsort(nums, numsSize, sizeof(int), compare);
+    //qsort(nums, numsSize, sizeof(int), compare);
+
+    //quicksort(nums, 0, numsSize-1);
+    mergesort(nums, numsSize);
 
     for (int i = 0; i < numsSize - 2; i++){
         nStart = i+1;
